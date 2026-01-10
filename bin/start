@@ -2,12 +2,13 @@
 set -a
 source .env
 
+# Auto-generate SSL certificates if they don't exist
+if [ ! -f "./config/nginx/ssl/${APP_DOMAIN}.pem" ]; then
+  echo "SSL certificates not found. Generating..."
+  bin/setup-ssl
+fi
+
 bin/fix-permissions
 bin/fix-owner
 
-if [ "${WP_PROTOCOL}" == "https" ];
-then
-  docker-compose -f docker-compose-ssl.yml up "$@"
-else
-  docker-compose -f docker-compose.yml up "$@"
-fi
+docker-compose up "$@"

@@ -6,10 +6,10 @@ A Docker-based WordPress development environment using **standard WordPress stru
 
 - Docker-based (no local PHP/MySQL required)
 - Standard WordPress structure (`public/` as document root)
+- **HTTPS by default** (auto-generated SSL certificates)
 - WP-CLI pre-installed
 - Mailpit for email testing
 - phpMyAdmin for database management
-- Optional SSL support
 - Multisite support (subdirectory mode)
 
 ## Structure
@@ -32,7 +32,6 @@ docker-wordpress-standard/
 ├── bin/                      ← Helper scripts
 ├── db/                       ← Database dumps
 ├── docker-compose.yml
-├── docker-compose-ssl.yml
 ├── .env.example
 └── README.md
 ```
@@ -53,7 +52,6 @@ Edit `.env` to customize:
 - `APP_NAME` - Your site name (used for container names and domain)
 - `APP_DOMAIN` - Local domain (default: `${APP_NAME}.local`)
 - `WP_ADMIN_USER` / `WP_ADMIN_PASSWORD` - WordPress admin credentials
-- `WP_PROTOCOL` - `http` or `https`
 
 ### 3. Add Local Domain to Hosts File
 
@@ -71,6 +69,8 @@ echo 127.0.0.1 mysite.local >> C:\Windows\System32\drivers\etc\hosts
 bin/start
 ```
 
+On first run, SSL certificates are **automatically generated** for your domain.
+
 ### 5. Install WordPress
 
 After containers are running, in a new terminal:
@@ -81,8 +81,8 @@ bin/setup-wp
 
 ### 6. Access Your Site
 
-- **Site**: http://mysite.local (or https:// if SSL enabled)
-- **Admin**: http://mysite.local/wp-admin
+- **Site**: https://mysite.local
+- **Admin**: https://mysite.local/wp-admin
 - **phpMyAdmin**: http://localhost:1337
 - **Mailpit**: http://localhost:8025
 
@@ -90,14 +90,13 @@ bin/setup-wp
 
 | Command | Description |
 |---------|-------------|
-| `bin/start` | Start all containers |
+| `bin/start` | Start all containers (auto-generates SSL certs on first run) |
 | `bin/stop` | Stop all containers |
 | `bin/down` | Stop and remove containers |
 | `bin/restart` | Restart containers |
 | `bin/bash` | Enter WordPress container shell |
 | `bin/cli [cmd]` | Run command in WordPress container |
 | `bin/setup-wp` | Install WordPress |
-| `bin/setup-ssl` | Generate SSL certificates |
 | `bin/mysql` | Enter MySQL shell |
 | `bin/mysql-dump` | Export database |
 | `bin/mysql-import [file]` | Import database |
@@ -114,16 +113,16 @@ bin/cli bash -c "wp theme install flavor flavor activate"
 bin/cli bash -c "wp user create john john@example.com --role=editor"
 ```
 
-## SSL Setup (Optional)
+## SSL Certificates
 
-1. Download [mkcert](https://github.com/FiloSottile/mkcert) for your platform
-2. Place the executable in `config/nginx/ssl/`
-3. Run setup:
-   ```bash
-   bin/setup-ssl
-   ```
-4. Change `WP_PROTOCOL=https` in `.env`
-5. Restart: `bin/restart`
+SSL certificates are **automatically generated** on first `bin/start` using [mkcert](https://github.com/FiloSottile/mkcert).
+
+The mkcert binary is bundled in `config/nginx/ssl/`. If you need to regenerate certificates:
+
+```bash
+bin/setup-ssl
+bin/restart
+```
 
 ## Multisite
 

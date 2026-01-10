@@ -10,8 +10,8 @@ docker exec -u root "${APP_NAME}-wordpress" chmod -R 777 /var/www/html
 # Force 'direct' filesystem method for WP
 bin/cli bash -c "wp config set 'FS_METHOD' \"'direct'\" --type=constant --add --raw"
 
-# Install WordPress database
-bin/cli bash -c "wp core install --url=${APP_DOMAIN} --title=${APP_NAME} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${ADMIN_EMAIL}"
+# Install WordPress database (always HTTPS)
+bin/cli bash -c "wp core install --url=https://${APP_DOMAIN} --title=${APP_NAME} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${ADMIN_EMAIL}"
 
 # Multisite installation (subdirectory mode)
 if [ "${WP_MULTISITE}" == "true" ];

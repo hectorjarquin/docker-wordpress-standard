@@ -2,9 +2,4 @@
 set -a
 source .env
 
-if [ "${WP_PROTOCOL}" == "https" ];
-then
-  docker-compose -f docker-compose-ssl.yml stop "$@"
-else
-  docker-compose -f docker-compose.yml stop "$@"
-fi
+docker-compose stop "$@"

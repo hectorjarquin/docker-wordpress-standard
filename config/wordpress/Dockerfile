@@ -1,5 +1,5 @@
 # 
-# WordPress with wp-cli for standard structure
+# WordPress with wp-cli and Xdebug for standard structure
 # Based on official WordPress Docker image
 
 FROM wordpress:php8.2-apache
@@ -16,6 +16,10 @@ RUN chmod +x /bin/wp-cli.phar /bin/wp
 # Cleanup
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install Xdebug
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 # Copy modified php.ini for development
 COPY php.ini-development /usr/local/etc/php
