@@ -149,16 +149,6 @@ The `.gitignore` excludes WordPress core files (they're downloaded on setup). To
 !public/wp-content/plugins/my-custom-plugin/
 ```
 
-## Differences from Composer Version
-
-| Aspect | This Repo (Standard) | Composer Version |
-|--------|---------------------|------------------|
-| WordPress core | Downloaded on setup | Composer dependency |
-| Directory structure | `public/` (flat) | `src/wp/` + `src/wp-content/` |
-| Plugin installation | wp-admin or manual | wpackagist + Composer |
-| Updates | wp-admin "Update" | `composer update` |
-| Compatibility | Local, Studio, most hosts | CI/CD pipelines |
-
 ## Requirements
 
 - Docker & Docker Compose
@@ -167,7 +157,3 @@ The `.gitignore` excludes WordPress core files (they're downloaded on setup). To
 ## License
 
 MIT
-
-## See Also
-
-- [docker-wordpress-composer](https://github.com/hectorjarquin/docker-wordpress-composer) - Bedrock/Composer-based alternative
