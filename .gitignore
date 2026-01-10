@@ -1,0 +1,46 @@
+### IDE
+.idea
+*.iml
+.vscode
+
+# Environment files
+.env
+
+### Node
+node_modules
+
+### Database - exclude all but keep directory
+db/*
+!db/.gitkeep
+
+### SSL certificates
+/config/nginx/ssl/*.pem
+
+### Logs
+logs/*
+!logs/.gitkeep
+
+### WordPress - exclude core files (downloaded on setup)
+public/*
+!public/.gitkeep
+!public/wp-content/
+
+### wp-content - keep structure but exclude uploads and cache
+public/wp-content/uploads/*
+!public/wp-content/uploads/.gitkeep
+public/wp-content/cache/
+public/wp-content/upgrade/
+
+# Keep custom themes and plugins
+# Uncomment to track your custom themes/plugins:
+# !public/wp-content/themes/your-custom-theme/
+# !public/wp-content/plugins/your-custom-plugin/
+
+### OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

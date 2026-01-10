@@ -1,0 +1,9 @@
+#!/bin/bash
+set -a
+source .env
+
+# Standard WordPress structure - all files in public/
+docker exec -u root "${APP_NAME}-wordpress" bash -c "
+  find /var/www/html/ -type d -exec chmod 755 {} \;
+  find /var/www/html/ -type f -exec chmod 644 {} \;
+"

@@ -1,0 +1,10 @@
+#!/bin/bash
+set -a
+source .env
+
+echo "==============================================="
+echo "PHP ERROR LOG:"
+echo "==============================================="
+docker logs "${APP_NAME}"-wordpress --tail "${TAIL_COUNT}" --details 2>&1 | grep -i error
+echo "==============================================="
+exit

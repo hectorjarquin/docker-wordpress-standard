@@ -1,0 +1,40 @@
+#!/bin/bash
+set -a
+source .env
+
+echo "WordPress: installing..."
+
+# Fix permissions inside the container
+docker exec -u root "${APP_NAME}-wordpress" chmod -R 777 /var/www/html
+
+# Force 'direct' filesystem method for WP
+bin/cli bash -c "wp config set 'FS_METHOD' \"'direct'\" --type=constant --add --raw"
+
+# Install WordPress database
+bin/cli bash -c "wp core install --url=${APP_DOMAIN} --title=${APP_NAME} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${ADMIN_EMAIL}"
+
+# Multisite installation (subdirectory mode)
+if [ "${WP_MULTISITE}" == "true" ];
+then
+  echo "WordPress: converting to multisite..."
+  
+  # Convert to multisite (subdirectory mode)
+  bin/cli bash -c "wp core multisite-convert --title='${APP_NAME} Network' --subdomains=false"
+  
+  # Add multisite constants to wp-config.php
+  bin/cli bash -c "wp config set 'MULTISITE' true --type=constant --add --raw"
+  bin/cli bash -c "wp config set 'SUBDOMAIN_INSTALL' false --type=constant --add --raw"
+  bin/cli bash -c "wp config set 'DOMAIN_CURRENT_SITE' '${APP_DOMAIN}' --type=constant --add"
+  bin/cli bash -c "wp config set 'PATH_CURRENT_SITE' '/' --type=constant --add"
+  bin/cli bash -c "wp config set 'SITE_ID_CURRENT_SITE' 1 --type=constant --add --raw"
+  bin/cli bash -c "wp config set 'BLOG_ID_CURRENT_SITE' 1 --type=constant --add --raw"
+  
+  echo "WordPress: multisite enabled!"
+fi
+
+# flush all cache
+bin/cli bash -c "wp cache flush"
+
+bin/fix-permissions
+
+echo "WordPress: ready!"

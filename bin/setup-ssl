@@ -1,0 +1,13 @@
+#!/bin/bash
+set -a
+source .env
+
+cd ./config/nginx/ssl || exit
+# ensure mkcert is executable
+chmod +x ./mkcert-v1.4.3-linux-amd64 2>/dev/null || true
+# generate ssl certs
+./mkcert-v1.4.3-linux-amd64 "${APP_DOMAIN}"
+
+cd ..
+# replace server name and certificate paths for the custom domain
+sed -i -e "s/site\.test/${APP_DOMAIN}/g" ./conf.d/default.conf

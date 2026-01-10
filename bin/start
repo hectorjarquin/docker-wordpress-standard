@@ -1,0 +1,13 @@
+#!/bin/bash
+set -a
+source .env
+
+bin/fix-permissions
+bin/fix-owner
+
+if [ "${WP_PROTOCOL}" == "https" ];
+then
+  docker-compose -f docker-compose-ssl.yml up "$@"
+else
+  docker-compose -f docker-compose.yml up "$@"
+fi

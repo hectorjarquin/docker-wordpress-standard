@@ -1,0 +1,6 @@
+#!/bin/bash
+set -a
+source .env
+
+# Standard WordPress structure - change owner for apache2
+chown www-data:www-data public/ -R

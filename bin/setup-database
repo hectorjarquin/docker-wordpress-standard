@@ -1,0 +1,5 @@
+#!/bin/bash
+set -a
+source .env
+
+bin/cli bash -c "wp core install --url=${APP_DOMAIN} --title=${APP_NAME} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${ADMIN_EMAIL}"

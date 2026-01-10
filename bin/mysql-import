@@ -1,0 +1,10 @@
+#!/bin/bash
+set -a
+source .env
+
+# The argument is the filename: 'dump_2023_11_03.sql' (must be in the ./db folder)
+filename="$@"
+
+docker cp "./db/$filename" "${APP_NAME}"-db:./"$filename"
+
+docker exec "${APP_NAME}"-db bash -c "mysql -uroot -p${DB_ROOT_PASSWORD} ${DB_NAME} < $filename"

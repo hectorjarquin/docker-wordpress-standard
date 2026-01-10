@@ -1,0 +1,10 @@
+#!/bin/bash
+set -a
+source .env
+
+if [ "${WP_PROTOCOL}" == "https" ];
+then
+  docker-compose -f docker-compose-ssl.yml down
+else
+  docker-compose -f docker-compose.yml down
+fi
