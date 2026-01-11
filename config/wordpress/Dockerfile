@@ -5,8 +5,8 @@
 FROM wordpress:php8.2-apache
 ARG SERVER_NAME
 
-# Install sudo, mysql client, text editors
-RUN apt-get update && apt-get install -y sudo less default-mysql-client nano vim unzip
+# Install sudo, mysql client, text editors, msmtp (for mailpit)
+RUN apt-get update && apt-get install -y sudo less default-mysql-client nano vim unzip msmtp msmtp-mta
 
 # Install WP-CLI 
 RUN curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -22,7 +22,11 @@ RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
 # Copy modified php.ini for development
-COPY php.ini-development /usr/local/etc/php
+COPY php.ini-development /usr/local/etc/php/php.ini
+
+# Copy msmtp config for mailpit
+COPY msmtprc /etc/msmtprc
+RUN chmod 644 /etc/msmtprc
 
 # Copy apache conf file
 COPY ./conf/000-default.conf /etc/apache2/sites-available/000-default.conf
