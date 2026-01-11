@@ -3,4 +3,9 @@ set -a
 source .env
 
 # Enter wordpress container
-docker exec -it "${APP_NAME}"-wordpress "$@"
+# Use -t only when TTY is available (not when called from scripts)
+if [ -t 0 ]; then
+  docker exec -it "${APP_NAME}"-wordpress "$@"
+else
+  docker exec -i "${APP_NAME}"-wordpress "$@"
+fi
