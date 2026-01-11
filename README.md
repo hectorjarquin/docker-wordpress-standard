@@ -149,6 +149,28 @@ The `.gitignore` excludes WordPress core files (they're downloaded on setup). To
 !public/wp-content/plugins/my-custom-plugin/
 ```
 
+## Running Multiple Sites
+
+To run multiple sites simultaneously, change the ports in `.env` for each site:
+
+| Site | HTTP_PORT | HTTPS_PORT | PHPMYADMIN_PORT | MAILPIT_UI_PORT |
+|------|-----------|------------|-----------------|------------------|
+| site1 | 80 | 443 | 1337 | 8025 |
+| site2 | 81 | 444 | 1338 | 8026 |
+| site3 | 82 | 445 | 1339 | 8027 |
+
+Example `.env` for second site:
+```dotenv
+APP_NAME=site2
+HTTP_PORT=81
+HTTPS_PORT=444
+PHPMYADMIN_PORT=1338
+MAILPIT_SMTP_PORT=1026
+MAILPIT_UI_PORT=8026
+```
+
+Access via: `https://site2.local:444`
+
 ## Requirements
 
 - Docker & Docker Compose
