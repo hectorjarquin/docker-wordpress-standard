@@ -109,7 +109,7 @@ bin/setup-wp
 ```bash
 # Run WP-CLI commands
 bin/cli bash -c "wp plugin list"
-bin/cli bash -c "wp theme install flavor flavor activate"
+bin/cli bash -c "wp theme list"
 bin/cli bash -c "wp user create john john@example.com --role=editor"
 ```
 
