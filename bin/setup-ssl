@@ -10,4 +10,5 @@ chmod +x ./mkcert-v1.4.3-linux-amd64 2>/dev/null || true
 
 cd ..
 # replace server name and certificate paths for the custom domain
-sed -i -e "s/site\.test/${APP_DOMAIN}/g" ./conf.d/default.conf
+# handles both fresh installs (mysite.local) and re-runs (any *.local domain)
+sed -i -E "s/[a-zA-Z0-9_-]+\.local/${APP_DOMAIN}/g" ./conf.d/default.conf
