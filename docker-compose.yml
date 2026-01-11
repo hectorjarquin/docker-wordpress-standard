@@ -26,6 +26,8 @@ services:
     build:
       context: ./config/wordpress
       dockerfile: Dockerfile
+      args:
+        - SERVER_NAME=${APP_DOMAIN}
     ports:
       - "8080:80"
     restart: unless-stopped
