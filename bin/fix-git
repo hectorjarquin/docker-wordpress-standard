@@ -1,0 +1,43 @@
+#!/bin/bash
+# fix-git - Configure git repos for Docker environments
+# Fixes the file permission mode tracking issue caused by Docker volume mounts
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+echo "Configuring git repositories..."
+
+# Get current user
+CURRENT_USER=$(whoami)
+CURRENT_GROUP=$(id -gn)
+
+# Find all git repos in the project
+find "$PROJECT_DIR" -name ".git" -type d 2>/dev/null | while read gitdir; do
+    repo_path="$(dirname "$gitdir")"
+    relative_path=$(realpath --relative-to="$PROJECT_DIR" "$repo_path" 2>/dev/null || echo "$repo_path")
+    
+    # Fix ownership of .git directory if needed (git needs write access for lock files)
+    if [ ! -w "$gitdir" ]; then
+        sudo chown -R "$CURRENT_USER:$CURRENT_GROUP" "$gitdir" 2>/dev/null
+    fi
+    
+    # Add to safe.directory if needed (fixes "dubious ownership" errors)
+    git config --global --add safe.directory "$repo_path" 2>/dev/null
+    
+    # Check if already configured
+    current_mode=$(git -C "$repo_path" config --get core.fileMode 2>/dev/null)
+    
+    if [ "$current_mode" = "false" ]; then
+        echo "  Already configured: $relative_path"
+        continue
+    fi
+    
+    if git -C "$repo_path" config core.fileMode false 2>/dev/null; then
+        echo "✓ Configured: $relative_path"
+    else
+        echo "✗ Could not configure: $relative_path"
+        echo "  Try: sudo chown -R $CURRENT_USER:$CURRENT_GROUP $gitdir"
+    fi
+done
+
+echo "Git configuration complete."

@@ -20,3 +20,6 @@ docker exec -u root "${APP_NAME}-wordpress" bash -c "
 "
 
 echo "Permissions fixed successfully."
+
+# Fix git fileMode for any repos in the project
+bin/fix-git
