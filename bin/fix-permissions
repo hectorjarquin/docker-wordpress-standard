@@ -4,6 +4,19 @@ source .env
 
 # Standard WordPress structure - all files in public/
 docker exec -u root "${APP_NAME}-wordpress" bash -c "
+  # Set ownership to www-data (Apache user)
+  chown -R www-data:www-data /var/www/html/wp-content
+
+  # Set directory permissions
   find /var/www/html/ -type d -exec chmod 755 {} \;
+
+  # Set file permissions
   find /var/www/html/ -type f -exec chmod 644 {} \;
+
+  # Ensure wp-content directories are writable for uploads, plugins, etc.
+  chmod -R 775 /var/www/html/wp-content/uploads 2>/dev/null || true
+  chmod -R 775 /var/www/html/wp-content/plugins 2>/dev/null || true
+  chmod -R 775 /var/www/html/wp-content/themes 2>/dev/null || true
 "
+
+echo "Permissions fixed successfully."
